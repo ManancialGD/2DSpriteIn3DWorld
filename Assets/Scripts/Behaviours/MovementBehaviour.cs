@@ -85,9 +85,12 @@ public class MovementBehaviour : MonoBehaviour, IPlayerBehaviour
     {
         Vector3 dir = Vector3.zero;
 
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+
         // Update movement direction based on input (forward, backward, strafing).
-        dir += transform.forward * movementInput.y * accSpeed * Time.fixedDeltaTime;
-        dir += transform.right * movementInput.x * accSpeed * Time.fixedDeltaTime;
+        dir += cameraForward * movementInput.y * accSpeed * Time.fixedDeltaTime;
+        dir += cameraRight * movementInput.x * accSpeed * Time.fixedDeltaTime;
 
         // Get current velocity and apply direction changes.
         Vector3 velocity = rb.linearVelocity;

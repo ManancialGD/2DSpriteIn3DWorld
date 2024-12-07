@@ -8,6 +8,6 @@ public class AnimationBehaviour : MonoBehaviour, IPlayerBehaviour
     }
     public void UpdateBehaviour()
     {
-
+        
     }
 }

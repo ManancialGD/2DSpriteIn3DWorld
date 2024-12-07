@@ -13,7 +13,6 @@ public class SpriteRenderer3D : MonoBehaviour
 
     void Awake()
     {
-        // Ensure the Renderer and Material references are set
         _renderer = GetComponent<Renderer>();
         if (_renderer != null)
             _material = _renderer.sharedMaterial;
@@ -23,8 +22,17 @@ public class SpriteRenderer3D : MonoBehaviour
     {
         if (sprite != null && _material != null)
         {
-            // Assign the sprite texture to the shader
+            sprite.texture.alphaIsTransparency = true;
+
             _material.SetTexture("_BaseMap", sprite.texture);
+
+            Vector4 uvData = new Vector4(
+                sprite.textureRect.x / sprite.texture.width,      // U Offset
+                sprite.textureRect.y / sprite.texture.height,     // V Offset
+                sprite.textureRect.width / sprite.texture.width,  // U Scale
+                sprite.textureRect.height / sprite.texture.height // V Scale
+            );
+            _material.SetVector("_BaseMapUV", uvData);
         }
     }
 }
