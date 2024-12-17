@@ -1,4 +1,4 @@
-# 2D Sprite in a 3D world
+# Integration of a 2D Sprite in a 3D world
 ---
 ## Objects:
 - Billboarding.
