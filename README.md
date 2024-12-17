@@ -4,7 +4,7 @@
 - Billboarding.
 - Y Billboarding.
 - Custom shadowmaps.
-- Custom how character is lit.
+- Custom how sprite is lit.
 ---
 # Billboarding.
 ## What is billboarding?
