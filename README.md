@@ -8,7 +8,7 @@
 ---
 # Billboarding.
 ## What is billboarding?
-Billboarding is the most common way of integrating sprites in a 3D World. Billboarding is taking a quad, with a texture attachted to it, and **rotating** it, so it faces the camera.
+Billboarding is the most common way of integrating sprites in a 3D World. Billboarding is taking a quad and make it always face the camera.
 
 So, how can we do that? Whell, we could just simply make the quad face the camera by using the `LookAt` method from Unity, like this:
 
@@ -19,8 +19,15 @@ private void Update()
   transform.Rotate(0, 180, 0);
 }
 ```
-But now we have some problems. What if the camera isn't the main camera?
-  
+But now we have some problems:
+- What if the camera isn't the main camera?
+- This code runs in CPU and are unoptimized;
+
+Whithout even saying that this is **not** Billboarding.
+As you can see in the picture:
+![NotBillboard](images/notbillboard.png)
+
+the image isn't actually facing the camera like a sprite would, this is actually just **rotating** towards the camera position.
 ---
 ## References
 
