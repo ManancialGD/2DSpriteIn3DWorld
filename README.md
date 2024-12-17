@@ -24,10 +24,13 @@ But now we have some problems:
 - This code runs in CPU and are unoptimized;
 
 Whithout even saying that this is **not** Billboarding.
+
 As you can see in the picture:
+
 ![NotBillboard](Images/notbillboard.png)
 
-the image isn't actually facing the camera like a sprite would, this is actually just **rotating** towards the camera position.
+the quad isn't actually facing the camera like a sprite would, this is actually just **rotating** towards the camera position.
+
 ---
 ## References
 
