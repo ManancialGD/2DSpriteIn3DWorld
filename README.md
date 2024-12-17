@@ -25,7 +25,7 @@ But now we have some problems:
 
 Whithout even saying that this is **not** Billboarding.
 As you can see in the picture:
-![NotBillboard](images/notbillboard.png)
+![NotBillboard](Images/notbillboard.png)
 
 the image isn't actually facing the camera like a sprite would, this is actually just **rotating** towards the camera position.
 ---
