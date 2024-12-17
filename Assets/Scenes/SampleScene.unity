@@ -687,7 +687,6 @@ MonoBehaviour:
   maxSpeed: 2.5
   accSpeed: 12.5
   decelerateSpeed: 12.5
-  rotationSpeed: 20
 --- !u!114 &1060620461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1064,7 +1063,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637411395}
-  m_Mesh: {fileID: 2110225347}
+  m_Mesh: {fileID: 1950704381}
 --- !u!95 &1637411403
 Animator:
   serializedVersion: 7
@@ -1173,13 +1172,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!43 &2110225347
+--- !u!43 &1950704381
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SpriteMesh (Instance) 7
+  m_Name: SpriteMesh (Instance) 1
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
