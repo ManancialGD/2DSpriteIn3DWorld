@@ -17,6 +17,7 @@ public class MovementBehaviour : MonoBehaviour, IPlayerBehaviour
     [SerializeField] private float decelerateSpeed = 12.5f;
 
     public bool CanMove { get; private set; } = true;
+    public Vector3 Direction { get; private set; }
     private Rigidbody rb;
     private Vector2 movementInput;
 
@@ -26,6 +27,8 @@ public class MovementBehaviour : MonoBehaviour, IPlayerBehaviour
         rb.useGravity = false;
         rb.linearDamping = 0;
         rb.freezeRotation = true;
+
+        Direction = Vector2.down;
 
         return moveAction != null && rb != null;
     }
@@ -84,28 +87,30 @@ public class MovementBehaviour : MonoBehaviour, IPlayerBehaviour
     private void UpdateVelocity()
     {
         Vector3 dir = Vector3.zero;
+        
+        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.normalized.x, 0, Camera.main.transform.forward.normalized.z).normalized;
+        Vector3 cameraRight = new Vector3(Camera.main.transform.right.normalized.x, 0, Camera.main.transform.right.normalized.z).normalized;
+    
+        Vector3 targetDirection = (cameraForward * movementInput.y) + (cameraRight * movementInput.x);
 
-        Vector3 cameraForward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
-        Vector3 cameraRight = new Vector3(Camera.main.transform.right.x, 0, Camera.main.transform.right.z).normalized;
+        targetDirection = targetDirection.normalized;
 
-        // Update movement direction based on input (forward, backward, strafing).
-        dir += cameraForward * movementInput.y * accSpeed * Time.fixedDeltaTime;
-        dir += cameraRight * movementInput.x * accSpeed * Time.fixedDeltaTime;
+        if (targetDirection == Vector3.zero) return;
+        Direction = targetDirection;
 
-        // Get current velocity and apply direction changes.
         Vector3 velocity = rb.linearVelocity;
-        velocity += dir;
 
-        // Clamp velocity to max speeds.
+        velocity += Direction * accSpeed * Time.fixedDeltaTime;
+
         if (velocity.magnitude > maxSpeed)
         {
             velocity = velocity.normalized * maxSpeed;
         }
 
-        // Apply updated velocity to the Rigidbody.
         rb.linearVelocity = velocity;
-        Log($"Updated velocity: {velocity}");
     }
+
+
 
     public void MoveActionChanged(InputAction.CallbackContext context)
     {
