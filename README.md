@@ -31,6 +31,8 @@ As you can see in the picture:
 
 the quad isn't actually facing the camera like a sprite would, this is actually just **rotating** towards the camera position.
 
+![ThisIsBillboarding](Images/thisisbillboarding.png)
+
 ---
 ## References
 
