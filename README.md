@@ -6,7 +6,7 @@
 - Custom shadowmaps.
 - Custom how sprite is lit.
 ---
-# Billboarding.
+# Billboarding
 ## What is billboarding?
 Billboarding is the most common way of integrating sprites in a 3D World. Billboarding is taking a quad and make it always face the camera.
 
