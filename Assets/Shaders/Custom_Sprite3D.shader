@@ -54,7 +54,7 @@ Shader "Custom/Custom_Sprite3D"
                 return o;
             }
 
-            float frag(vertexOutput i) : SV_Target
+            float frag(vertexInput i) : SV_Target
             {
                 float4 texColor = tex2D(_BaseMap, i.uv);
          
