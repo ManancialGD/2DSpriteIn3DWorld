@@ -19,12 +19,15 @@ Shader "Custom/Custom_Sprite3D"
             #pragma vertex vert
             #pragma fragment frag
 
+            #include "UnityCG.cginc"
+
             struct vertexInput
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
-            struct vertexOutpot
+            
+            struct vertexOutput
             {
                 float4 pos : SV_POSITION;
                 float2 uv : TEXCOORD0;
@@ -33,9 +36,9 @@ Shader "Custom/Custom_Sprite3D"
             sampler2D _BaseMap;
             float4 _BaseMap_ST;
             
-            vertexOutpot vert (vertexInput v)
+            vertexOutput vert (vertexInput v)
             {
-                vertexOutpot o;
+                vertexOutput o;
 
                 float4 origin = float4(0,0,0,1);
                 float4 world_origin = mul(UNITY_MATRIX_M, origin);
@@ -47,13 +50,16 @@ Shader "Custom/Custom_Sprite3D"
                 float4 clip_pos = mul(UNITY_MATRIX_P, view_pos);
 
                 o.pos = clip_pos;
+                o.uv = TRANSFORM_TEX(v.uv, _BaseMap);
                 return o;
             }
 
-            float4 frag(vertexOutpot i): SV_Target
+            float frag(vertexOutput i) : SV_Target
             {
-                fixed4 col = tex2D(_BaseMap, i.uv);
-                return col;
+                float4 texColor = tex2D(_BaseMap, i.uv);
+         
+                clip(texColor.a - 0.5);
+                return texColor.a;
             }
 
             ENDCG
