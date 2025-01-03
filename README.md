@@ -295,4 +295,7 @@ This could be more fancy, by applying the gradient as the position of the pixel 
 
 "Built-in shader variables reference", Unity Manual. Available at: https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
 
-And of course: [Diogo Andrade on Youtube](https://www.youtube.com/@diogoandrade9588)
+
+My classes at Lusófona by: [Diogo Andrade on Youtube](https://www.youtube.com/@diogoandrade9588)
+
+And what inspired to make this project: "Building a 3D pixel art horror game in Unity's URP | Enigma of Fear", Unity at 1:39:0. Available at: https://www.youtube.com/watch?v=9t2PRRnE8vo&t=6691s&ab_channel=Unity
