@@ -1,9 +1,13 @@
 # Integration of a 2D Sprite in a 3D World
 
+## Summary
+This report covers the integration of 2D sprites into a 3D world using various techniques such as billboarding, custom shadowmaps, and lighting. It includes detailed explanations, shader code examples, and visual results.
+
 ## Objectives:
 - Billboarding.
 - Y Billboarding.
 - Custom shadowmaps.
+- Lighting.
 
 ---
 
@@ -58,6 +62,7 @@ Now we get this:
 ![ThisIsBillboarding](Images/thisisbillboarding.png)
 
 ---
+
 ## Y Billboarding
 
 I searched a lot on the internet but didn't find how to make Y Billboarding in a vertex shader...
@@ -78,7 +83,7 @@ So, now we can add a character to our plane, and a spotlight.
 To add shadows, we can add another pass to our shader.
 And also, add these tags:
 
-```
+```cs
 Pass
 {
   Name "ShadowCaster"
@@ -143,11 +148,142 @@ Based on the dot product of the light-to-object vector with the forward vector, 
 
 This is all in theory; I couldn't implement this in practice.
 
+
+We also have this issue, the shadow is clipping into the wall.
+
+![ShadowClip](Images/ShadowClipping.png)
+
+---
+
+## Lighting
+
+To make our character respond to lighting in the scene, we need to calculate the lighting based on the normals of our vertices and the light's position and color.
+
+### Adding Normals
+
+First, we need to include the normal data in our vertex input and output structures. This allows us to calculate how light interacts with the surface of our sprite.
+
+```cs
+struct appdata_t
+{
+  float4 vertex : POSITION;
+  float2 uv : TEXCOORD0;
+  float3 normal : NORMAL; // Add normal data
+};
+
+struct v2f
+{
+  float2 uv : TEXCOORD0;
+  float4 vertex : SV_POSITION;
+  half3 worldNormal : NORMAL; // Add normal data
+};
+```
+
+### Directional Light
+
+Next, we need to calculate the lighting based on the direction of the light. We use the `_WorldSpaceLightPos0` variable to get the light's position.
+
+```cs
+float ComputeLighting(float3 normal)
+{
+  float3 lightDir = normalize(_WorldSpaceLightPos0.xyz);
+  float NdotL = dot(normal, lightDir);
+  return NdotL;
+}
+```
+
+This function calculates the dot product of the normal and the light direction, giving us the intensity of the light on the surface.
+
+### Handling Light from Different Angles
+
+To avoid the character becoming completely black when the light hits from the side or behind, we can adjust the lighting calculation to ensure some light is always present.
+
+```cs
+float ComputeLighting(float3 normal)
+{
+  float3 lightDir = normalize(_WorldSpaceLightPos0.xyz);
+  float realDot = dot(normal, lightDir);
+  float NdotL = abs(realDot);
+
+  if (realDot <= 0)  // Light comes from behind
+  {
+    NdotL += dot(normal, lightDir) * 0.8; // Darker than the front
+  }
+
+  NdotL += 0.1; // Ensure it's never pitch black
+  return NdotL;
+}
+```
+
+But we have a huge issue.
+Let's say that the directional light is hitting it from the front.
+When we rotate the camera 90°.
+The light is hitting it from the side, but since we did not really rotate the sprite,
+it's computing as it's hitting from the front.
+
+to fix this, the normal should be the vector vertex.position -> camera, normalized.
+When I tried to do it like this:
+
+```cs
+float3 cameraPos = float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z);
+float lightInfo = ComputeLighting(normalize(cameraPos - i.vertex));
+```
+
+
+### Applying Light Color
+
+Finally, we apply the light color to our fragment shader. We use `_LightColor0` to get the light's color and multiply it with the texture color and the computed lighting.
+
+```cs
+fixed4 frag(v2f i) : SV_Target
+{
+  // Sample the texture
+  fixed4 texColor = tex2D(_BaseMap, i.uv);
+
+  // Calculate lighting
+  float lightInfo = ComputeLighting(i.worldNormal);
+
+  // Apply lighting to the color
+  float3 finalColor = lightInfo * texColor.rgb * _LightColor0.xyz;
+
+  return fixed4(finalColor, texColor.a);
+}
+```
+
+This ensures that our character is properly lit and tinted by the light color in the scene.
+
+![LightTint](Images/LightTint.png)
+
+Additionally we can also use the ambient light like this:
+
+```cs
+float3 finalColor = texColor.rgb * (unity_AmbientEquator + (lightInfo * _LightColor0.rgb));
+```
+
+This could be more fancy, like making really the gradient.
+
 ---
 
 ## References
 
-Character art: The Adventurer - Male. sScary. Available at: https://sscary.itch.io/the-adventurer-male
+"Character art: The Adventurer - Male", sScary. Available at: https://sscary.itch.io/the-adventurer-male
 
 "What is billboarding and can/should it be used in 3D games to create special effects?" Game Development Stack Exchange. Available at: https://gamedev.stackexchange.com/questions/54871
 
+"What are the fundamentals of a Quad Billboarding effect?", Game Development Stack Exchange. Available at: https://gamedev.stackexchange.com/questions/19037/what-are-the-fundamentals-of-a-quad-billboarding-effect?rq=1
+
+"Custom Shadow Mapping in Unity", Shahriar Shahrabi. Available at: https://shahriyarshahrabi.medium.com/custom-shadow-mapping-in-unity-c42a81e1bbf8
+
+"How to make unlit shader that casts shadow?", Khai3 in Unity Discussions. Available at: https://discussions.unity.com/t/how-to-make-unlit-shader-that-casts-shadow/736016
+
+"Billboarding Shaders - 3D Games in GameMaker", DragoniteSpam. Available at: https://www.youtube.com/watch?v=gMKMRkZzR9M&ab_channel=DragoniteSpam
+
+"Real time lighting in custom shaders", scottharber in Unity Discussions. Available at: https://discussions.unity.com/t/real-time-lighting-in-custom-shaders/658262/5
+
+"How to turn this unlit shader into a lit shader? HELP", pwolf1897 in Unity Discussions. Available at: https://discussions.unity.com/t/how-to-turn-this-unlit-shader-into-a-lit-shader-help/931815
+
+"Toon Shader From Scratch - Explained!", eleonora. Available at: https://www.youtube.com/watch?v=owwnUcmO3Lw&ab_channel=eleonora
+
+"Built-in shader variables reference", Unity Manual. Available at: https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
+
+And of course: [Diogo Andrade on Youtube](https://www.youtube.com/@diogoandrade9588)
