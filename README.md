@@ -101,7 +101,9 @@ But now we have a problem. If the light is 90° from the plane, we get this:
 
 ![WithoutShadowBillboarding](Images/WhithoutShadowBillboarding.png)
 
-The shadow is just a line. But it makes sense; only the rendering to the camera is billboarding. We also need to add the billboarding to the vertex shader. And we get this:
+The shadow is just a line.
+But it makes sense, only the rendering to the camera is billboarding.
+Adding billboarding to our new vertex shader, we get this:
 
 ![WithShaderBillBoarding](Images/WithShaderBillBoarding.png)
 
