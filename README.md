@@ -17,13 +17,14 @@ Billboarding is the most common way of integrating sprites in a 3D world. Billbo
 
 So, how can we do that? Well, we could simply make the quad face the camera by using the `LookAt` method from Unity, like this:
 
-```csharp
+```cs
 private void Update()
 {
   transform.LookAt(Camera.main.transform);
   transform.Rotate(0, 180, 0);
 }
 ```
+
 But now we have some problems, like what if the camera isn't the main camera?
 
 Not just the cameras, but if we get close to the object, this happens:
@@ -34,7 +35,7 @@ The quad isn't actually facing the camera like a sprite would, it is just **rota
 
 Instead, we can solve this problem by using a shader. In the vertex shader, we can use the following code:
 
-```shader
+```cs
 v2f vert (appdata v)
 {
     v2f o;
@@ -128,7 +129,7 @@ I also tried with `unity_LightPosition` but no luck.
 Now we want to make the shadow, not a quad, but follow the alpha on the texture.
 We can do that by returning the alpha in the fragment shader, like this:
 
-```
+```cs
 float frag(vertexOutput i) : SV_Target
 {
   float4 texColor = tex2D(_BaseMap, i.uv);
@@ -149,7 +150,7 @@ At certain angles, we start to expect the shadow to be flipped, like this:
 
 We can see the character's backpack on the left, but in the shadow, it's on the right.
 
-### Solution:
+Solution:
 Based on the dot product of the light-to-object vector with the forward vector, we can check if the dot product is greater than 0 and flip the shadow.
 
 This is all in theory; I couldn't implement this in practice.
