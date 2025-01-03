@@ -269,7 +269,7 @@ Additionally we can also use the ambient light like this:
 float3 finalColor = texColor.rgb * (unity_AmbientEquator + (lightInfo * _LightColor0.rgb));
 ```
 
-This could be more fancy, like making really the gradient.
+This could be more fancy, by applying the gradient as the position of the pixel goes up.
 
 ---
 
