@@ -103,7 +103,7 @@ But now we have a problem. If the light is 90° from the plane, we get this:
 
 The shadow is just a line. But it makes sense; only the rendering to the camera is billboarding. We also need to add the billboarding to the vertex shader. And we get this:
 
-![WithShaderBillboarding](Images/WithShaderBillboarding.png)
+![WithShaderBillBoarding](Images/WithShaderBillBoarding.png)
 
 But now we have another problem. This method of billboarding for the shadows works fine for *Directional Light* and *Spot Light*. But when we use point light, this happens:
 
