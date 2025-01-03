@@ -151,9 +151,11 @@ At certain angles, we start to expect the shadow to be flipped, like this:
 We can see the character's backpack on the left, but in the shadow, it's on the right.
 
 Solution:
-Based on the dot product of the light-to-object vector with the forward vector, we can check if the dot product is greater than 0 and flip the shadow.
 
-This is all in theory; I couldn't implement this in practice.
+Based on the dot product of the light-to-object vector with the normal, we can check if the dot product is greater than 0 and flip the shadow.
+
+This is all in theory.
+I wasn't able to implement this in practice.
 
 
 We also have this issue, the shadow is clipping into the wall.
