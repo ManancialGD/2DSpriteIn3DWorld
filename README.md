@@ -117,7 +117,11 @@ See, a point light emits light in all directions, so it needs to render shadows 
 
 Since we are billboarding to the direction the light is rendering, and point light has 6, this is what happens.
 
-Solution? I didn't actually find a solution to this...
+Solition?
+
+Well, we could make the billboarding for the shadows making it face the camera instead of using the projection matrix.
+But using the varriable `_WorldSpaceCameraPos` was not going anywhere.
+I also tried with `unity_LightPosition` but no luck.
 
 ### Alpha Texture based Shadow.
 
