@@ -162,6 +162,9 @@ We also have this issue, the shadow is clipping into the wall.
 
 ![ShadowClip](Images/ShadowClipping.png)
 
+I didn't have time to take a big look into it,
+but I think it might be because of billboarding or maybe the depth map.
+
 ---
 
 ## Lighting
