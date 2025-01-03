@@ -65,12 +65,12 @@ Now we get this:
 
 ## Y Billboarding
 
-I searched a lot on the internet but didn't find how to make Y Billboarding in a vertex shader...
+I attempted to implement Y Billboarding in Unity but encountered challenges in keeping the sprite upright while making it face the camera.
+Despite trying various matrix manipulations, I couldn't achieve the desired effect.
 
-I tried applying matrices in all axis but the y, didn't work.
+I found this shader for GameMaker that accomplished this, but I struggled to translate it to Unity's HLSL. Here: [Billboarding Shaders - 3D Games in GameMaker](https://www.youtube.com/watch?v=gMKMRkZzR9M&ab_channel=DragoniteSpam)
 
-Only a shader for GameMaker that I couldn't translate to Unity HLSL.
-[Billboarding Shaders - 3D Games in GameMaker](https://www.youtube.com/watch?v=gMKMRkZzR9M&ab_channel=DragoniteSpam)
+For some reason, for the duration of this project, I found hard to use the camera in HLSL using the `_WorldSpaceCameraPos` varriable
 
 ---
 
