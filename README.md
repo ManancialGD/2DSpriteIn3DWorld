@@ -241,6 +241,15 @@ float3 cameraPos = float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z);
 float lightInfo = ComputeLighting(normalize(cameraPos - i.vertex));
 ```
 
+But with no luck. This didn't work as planned, and I couldn't fix this.
+
+### Spot light a Point light
+
+I tried really hard to implement this lights.
+Professor Diogo had a really good explanation on the light topic in this [class](https://www.youtube.com/watch?v=iZurlIJ0Oks&list=PLheBz0T_uVP3otI0NDkf3PDKAxRD9MIS6&index=7&ab_channel=DiogoAndrade).
+And I also read and tried all varriables on the [Unity Docs](https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html).
+
+Nothing worked and couldn't achieve spot light and point lights.
 
 ### Applying Light Color
 
