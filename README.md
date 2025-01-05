@@ -196,7 +196,12 @@ This function calculates the dot product of the normal and the light direction, 
 
 ### Handling Light from Different Angles
 
-To avoid the character becoming completely black when the light hits from the side or behind, we can adjust the lighting calculation to ensure some light is always present.
+The character becomes completely black when the light hits from the side, or from behind.
+Like this:
+
+![LightProblem](Images/LightProblem.png)
+
+To avoid this, we can adjust the lighting calculation to ensure some light is always present.
 
 ```cs
 float ComputeLighting(float3 normal)
@@ -214,6 +219,10 @@ float ComputeLighting(float3 normal)
   return NdotL;
 }
 ```
+
+![FromFront](Images/FromFront.png)
+![FromSide](Images/FromSide.png)
+![FromBack](Images/FromBack.png)
 
 But we have a huge issue.
 Let's say that the directional light is hitting it from the front.
