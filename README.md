@@ -17,13 +17,14 @@ Billboarding is the most common way of integrating sprites in a 3D world. Billbo
 
 So, how can we do that? Well, we could simply make the quad face the camera by using the `LookAt` method from Unity, like this:
 
-```csharp
+```cs
 private void Update()
 {
   transform.LookAt(Camera.main.transform);
   transform.Rotate(0, 180, 0);
 }
 ```
+
 But now we have some problems, like what if the camera isn't the main camera?
 
 Not just the cameras, but if we get close to the object, this happens:
@@ -34,7 +35,7 @@ The quad isn't actually facing the camera like a sprite would, it is just **rota
 
 Instead, we can solve this problem by using a shader. In the vertex shader, we can use the following code:
 
-```shader
+```cs
 v2f vert (appdata v)
 {
     v2f o;
@@ -65,12 +66,12 @@ Now we get this:
 
 ## Y Billboarding
 
-I searched a lot on the internet but didn't find how to make Y Billboarding in a vertex shader...
+I attempted to implement Y Billboarding in Unity but encountered challenges in keeping the sprite upright while making it face the camera.
+Despite trying various matrix manipulations, I couldn't achieve the desired effect.
 
-I tried applying matrices in all axis but the y, didn't work.
+I found this shader for GameMaker that accomplished this, but I struggled to translate it to Unity's HLSL. Here: [Billboarding Shaders - 3D Games in GameMaker](https://www.youtube.com/watch?v=gMKMRkZzR9M&ab_channel=DragoniteSpam)
 
-Only a shader for GameMaker that I couldn't translate to Unity HLSL.
-[Billboarding Shaders - 3D Games in GameMaker](https://www.youtube.com/watch?v=gMKMRkZzR9M&ab_channel=DragoniteSpam)
+For some reason, for the duration of this project, I found hard to use the camera in HLSL using the `_WorldSpaceCameraPos` varriable
 
 ---
 
@@ -101,9 +102,11 @@ But now we have a problem. If the light is 90° from the plane, we get this:
 
 ![WithoutShadowBillboarding](Images/WhithoutShadowBillboarding.png)
 
-The shadow is just a line. But it makes sense; only the rendering to the camera is billboarding. We also need to add the billboarding to the vertex shader. And we get this:
+The shadow is just a line.
+But it makes sense, only the rendering to the camera is billboarding.
+Adding billboarding to our new vertex shader, we get this:
 
-![WithShaderBillboarding](Images/WithShaderBillboarding.png)
+![WithShaderBillBoarding](Images/WithShaderBillBoarding.png)
 
 But now we have another problem. This method of billboarding for the shadows works fine for *Directional Light* and *Spot Light*. But when we use point light, this happens:
 
@@ -115,14 +118,18 @@ See, a point light emits light in all directions, so it needs to render shadows 
 
 Since we are billboarding to the direction the light is rendering, and point light has 6, this is what happens.
 
-Solution? I didn't actually find a solution to this...
+Solition?
+
+Well, we could make the billboarding for the shadows making it face the camera instead of using the projection matrix.
+But using the varriable `_WorldSpaceCameraPos` was not going anywhere.
+I also tried with `unity_LightPosition` but no luck.
 
 ### Alpha Texture based Shadow.
 
 Now we want to make the shadow, not a quad, but follow the alpha on the texture.
 We can do that by returning the alpha in the fragment shader, like this:
 
-```
+```cs
 float frag(vertexOutput i) : SV_Target
 {
   float4 texColor = tex2D(_BaseMap, i.uv);
@@ -143,15 +150,20 @@ At certain angles, we start to expect the shadow to be flipped, like this:
 
 We can see the character's backpack on the left, but in the shadow, it's on the right.
 
-### Solution:
-Based on the dot product of the light-to-object vector with the forward vector, we can check if the dot product is greater than 0 and flip the shadow.
+Solution:
 
-This is all in theory; I couldn't implement this in practice.
+Based on the dot product of the light-to-object vector with the normal, we can check if the dot product is greater than 0 and flip the shadow.
+
+This is all in theory.
+I wasn't able to implement this in practice.
 
 
 We also have this issue, the shadow is clipping into the wall.
 
 ![ShadowClip](Images/ShadowClipping.png)
+
+I didn't have time to take a big look into it,
+but I think it might be because of billboarding or maybe the depth map.
 
 ---
 
@@ -238,6 +250,15 @@ float3 cameraPos = float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z);
 float lightInfo = ComputeLighting(normalize(cameraPos - i.vertex));
 ```
 
+But with no luck. This didn't work as planned, and I couldn't fix this.
+
+### Spot light a Point light
+
+I tried really hard to implement this lights.
+Professor Diogo had a really good explanation on the light topic in this [class](https://www.youtube.com/watch?v=iZurlIJ0Oks&list=PLheBz0T_uVP3otI0NDkf3PDKAxRD9MIS6&index=7&ab_channel=DiogoAndrade).
+And I also read and tried all varriables on the [Unity Docs](https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html).
+
+Nothing worked and couldn't achieve spot light and point lights.
 
 ### Applying Light Color
 
@@ -269,7 +290,7 @@ Additionally we can also use the ambient light like this:
 float3 finalColor = texColor.rgb * (unity_AmbientEquator + (lightInfo * _LightColor0.rgb));
 ```
 
-This could be more fancy, like making really the gradient.
+This could be more fancy, by applying the gradient as the position of the pixel goes up.
 
 ---
 
@@ -295,4 +316,7 @@ This could be more fancy, like making really the gradient.
 
 "Built-in shader variables reference", Unity Manual. Available at: https://docs.unity3d.com/Manual/SL-UnityShaderVariables.html
 
-And of course: [Diogo Andrade on Youtube](https://www.youtube.com/@diogoandrade9588)
+
+My classes at Lusófona by: [Diogo Andrade on Youtube](https://www.youtube.com/@diogoandrade9588)
+
+And what inspired to make this project: "Building a 3D pixel art horror game in Unity's URP | Enigma of Fear", Unity at 1:39:0. Available at: https://www.youtube.com/watch?v=9t2PRRnE8vo&t=6691s&ab_channel=Unity
