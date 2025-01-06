@@ -236,21 +236,19 @@ float ComputeLighting(float3 normal)
 ![FromSide](Images/FromSide.png)
 ![FromBack](Images/FromBack.png)
 
-But we have a huge issue.
-Let's say that the directional light is hitting it from the front.
-When we rotate the camera 90°.
-The light is hitting it from the side, but since we did not really rotate the sprite,
-it's computing as it's hitting from the front.
 
-to fix this, the normal should be the vector vertex.position -> camera, normalized.
-When I tried to do it like this:
+However, we encounter a huge issue.
+When the directional light hits the sprite from the front and we rotate the camera by 90°, the light should now be hitting the sprite from the side.
+But since the sprite itself hasn't rotated, the lighting computation still treats it as if the light is coming from the front.
+
+To resolve this, we can multiply the normal by the inverse view matrix.
+Like this:
 
 ```cs
-float3 cameraPos = float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z);
-float lightInfo = ComputeLighting(normalize(cameraPos - i.vertex));
+float lightInfo = ComputeLighting(mul(UNITY_MATRIX_IT_V, i.worldNormal));
 ```
 
-But with no luck. This didn't work as planned, and I couldn't fix this.
+With this adjustment, the lighting will correctly respond to camera rotations.
 
 ### Spot light a Point light
 

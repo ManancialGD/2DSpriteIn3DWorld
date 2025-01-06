@@ -151,7 +151,7 @@ Shader "Custom/Custom_Sprite3D"
                 fixed4 texColor = tex2D(_BaseMap, i.uv);
 
                 // Calculate lighting
-                float lightInfo = ComputeLighting(i.worldNormal);
+                float lightInfo = ComputeLighting(mul( -UNITY_MATRIX_V, i.worldNormal));
 
                 // Apply lighting to the color
                 float3 finalColor = texColor.rgb * (unity_AmbientEquator + (lightInfo * _LightColor0.rgb));
